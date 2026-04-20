@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+
+  # ── Servizio 1: Menu interattivo Telegram (sempre attivo) ──────────────────
+  bandi-menu:
+    build: .
+    container_name: kiranet-bandi-menu
+    restart: unless-stopped
+    command: ["menu"]
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - DB_PATH=/data/bandi_seen.db
+      - LOG_PATH=/logs/bandi_menu.log
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/data
+      - ./logs:/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # ── Servizio 2: Ricerca automatica giornaliera (cron) ─────────────────────
+  bandi-cron:
+    build: .
+    container_name: kiranet-bandi-cron
+    restart: unless-stopped
+    command: ["cron"]
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - DB_PATH=/data/bandi_seen.db
+      - LOG_PATH=/logs/bandi_cron.log
+      - CRON_SCHEDULE=15 7 * * *
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/data
+      - ./logs:/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
