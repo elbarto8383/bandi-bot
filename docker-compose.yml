@@ -10,7 +10,7 @@ services:
     command: ["menu"]
     environment:
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
-      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - TELEGRAM_CHAT_IDS=${TELEGRAM_CHAT_IDS}
       - DB_PATH=/data/bandi_seen.db
       - LOG_PATH=/logs/bandi_menu.log
       - LOG_LEVEL=INFO
@@ -28,10 +28,10 @@ services:
     build: .
     container_name: kiranet-bandi-cron
     restart: unless-stopped
-    command: ["cron"]
+    command: ["search"]
     environment:
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
-      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - TELEGRAM_CHAT_IDS=${TELEGRAM_CHAT_IDS}
       - DB_PATH=/data/bandi_seen.db
       - LOG_PATH=/logs/bandi_cron.log
       - CRON_SCHEDULE=15 7 * * *
